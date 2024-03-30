@@ -21,7 +21,17 @@ export default new Vuex.Store({
     },
     ADD_USUARIOS(state,usuario){
       state.usuarios.push(usuario)
-    }
+    },
+    DELETE_USUARIO(state, id) {
+      state.usuarios = state.usuarios.filter(usuario => usuario.id !== id);
+    },
+    UPDATE_USUARIO(state, usuarioActualizado) {
+      const index = state.usuarios.findIndex(usuario => usuario.id === usuarioActualizado.id);
+      if (index !== -1) {
+        Vue.set(state.usuarios, index, usuarioActualizado);
+      }
+    },
+    
   },
   actions: {
     async fetchPedidos({ commit }) {
@@ -40,6 +50,7 @@ export default new Vuex.Store({
         console.error('Error al crear pedido:', error);
       }
     },
+
     async fetchUsuarios({commit}){
       try{
         const usuarios = await userService.getUsuarios();
@@ -56,6 +67,25 @@ export default new Vuex.Store({
         console.error('Error al crear usuario:', error);
       }
     },
+    async deleteUsuario({ commit }, id) {
+      try {
+        await userService.deleteUsuario(id);
+        commit('DELETE_USUARIO', id); 
+      } catch (error) {
+        console.error('Error al eliminar usuario:', error);
+      }
+    },
+    async updateUsuario({ commit }, { id, usuario }) {
+      try {
+        const response = await userService.actualizarUsuario(id, usuario);
+        commit('UPDATE_USUARIO', response.usuario); 
+      } catch (error) {
+        console.error('Error al actualizar usuario:', error);
+        throw error; 
+      }
+      }
+    
+   
 
   },
 });
