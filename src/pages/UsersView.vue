@@ -62,7 +62,7 @@
         <md-button @click="open = false">Cancelar</md-button>
       </md-dialog-actions>
     </md-dialog>
-    <dialog-message :title="'Mensaje'" :message="dialogMessage" :show.sync="showDialog"></dialog-message>
+    <dialog-message :title="dialogTitle" :message="dialogMessage" :show.sync="showDialog"></dialog-message>
   </div>
 
 </template>
@@ -89,6 +89,7 @@ export default {
       },
       errors: {},
       dialogMessage: '',
+      dialogTitle:'',
       showDialog: false
     }
   },
@@ -107,6 +108,7 @@ export default {
 
         this.resetNuevoUsuario();
         this.open = false;
+        this.dialogTitle = "Nuevo usuario"
         this.dialogMessage = 'Usuario creado correctamente';
         this.showDialog = true;
       } catch (error) {

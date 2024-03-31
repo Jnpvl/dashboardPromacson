@@ -38,17 +38,21 @@
         <md-button @click="open = false">Cancelar</md-button>
       </md-dialog-actions>
     </md-dialog>
+    <dialog-message :title="dialogTitle" :message="dialogMessage" :show.sync="showDialog"></dialog-message>
 
   </div>
+  
 </template>
 
 <script>
 import { OrderTable } from "@/components";
 import { mapActions } from "vuex";
+import DialogMessage from '../components/DialogMessage.vue';
 
 export default {
   components: {
-    OrderTable
+    OrderTable,
+    DialogMessage
   },
   data() {
     return {
@@ -57,7 +61,10 @@ export default {
         folio: '',
         cliente: ''
       },
-      errors: []
+      errors: [],
+      dialogMessage: '',
+      dialogTitle: '',
+      showDialog: false
     }
   },
   mounted() {
@@ -85,6 +92,9 @@ export default {
         this.nuevoPedido = { folio: '', cliente: '' };
         this.open = false;
         this.errors = [];
+        this.dialogTitle = "Nuevo Pedido"
+        this.dialogMessage = 'Pedido creado correctamente';
+        this.showDialog = true;
       } catch (error) {
         console.error('Error al guardar el pedido:', error);
       }

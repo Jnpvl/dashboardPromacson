@@ -1,13 +1,13 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
-import orderService from '../services/orderService'; 
+import orderService from '../services/orderService';
 import userService from '../services/userService';
 Vue.use(Vuex);
 
 export default new Vuex.Store({
   state: {
     pedidos: [],
-    usuarios:[]
+    usuarios: []
   },
   mutations: {
     SET_PEDIDOS(state, pedidos) {
@@ -16,10 +16,21 @@ export default new Vuex.Store({
     ADD_PEDIDO(state, pedido) {
       state.pedidos.push(pedido);
     },
-    SET_USUARIOS(state,usuarios){
+    DELETE_PEDIDO(state, folio) {
+      state.pedidos = state.pedidos.filter(pedido => pedido.folio !== folio);
+    },
+    UPDATE_PEDIDO(state, pedidoActualizado) {
+      const index = state.pedidos.findIndex(pedido => pedido.folio === pedidoActualizado.folio);
+      if (index !== -1) {
+        Vue.set(state.pedidos, index, pedidoActualizado);
+      }
+    },
+
+
+    SET_USUARIOS(state, usuarios) {
       state.usuarios = usuarios;
     },
-    ADD_USUARIOS(state,usuario){
+    ADD_USUARIOS(state, usuario) {
       state.usuarios.push(usuario)
     },
     DELETE_USUARIO(state, id) {
@@ -31,7 +42,7 @@ export default new Vuex.Store({
         Vue.set(state.usuarios, index, usuarioActualizado);
       }
     },
-    
+
   },
   actions: {
     async fetchPedidos({ commit }) {
@@ -45,24 +56,42 @@ export default new Vuex.Store({
     async createPedido({ dispatch }, pedido) {
       try {
         await orderService.crearPedido(pedido);
-        dispatch('fetchPedidos'); 
+        dispatch('fetchPedidos');
       } catch (error) {
         console.error('Error al crear pedido:', error);
       }
     },
+    async deletePedido({ commit }, folio) {
+      try {
+        await orderService.deletePedido(folio);
+        commit('DELETE_PEDIDO', folio)
+      } catch (error) {
+        console.error('Error al eliminar pedido:', error)
+      }
+    },
+    async updatePedido({ commit }, { folio, pedido }) {
+      try {
+        const response = await orderService.actualizarPedido(folio, pedido);
+        commit('UPDATE_PEDIDO', response.pedido);
+      } catch (error) {
+        console.error('Error al actualizar pedido:', error);
+        throw error;
+      }
+    },
 
-    async fetchUsuarios({commit}){
-      try{
+
+    async fetchUsuarios({ commit }) {
+      try {
         const usuarios = await userService.getUsuarios();
-        commit('SET_USUARIOS',usuarios);
-      }catch(error){
-        console.log('Error al obtener clientes:',error)
+        commit('SET_USUARIOS', usuarios);
+      } catch (error) {
+        console.log('Error al obtener clientes:', error)
       }
     },
     async createUsuario({ dispatch }, usuario) {
       try {
         await userService.crearUsuario(usuario);
-        dispatch('fetchUsuarios'); 
+        dispatch('fetchUsuarios');
       } catch (error) {
         console.error('Error al crear usuario:', error);
       }
@@ -70,7 +99,7 @@ export default new Vuex.Store({
     async deleteUsuario({ commit }, id) {
       try {
         await userService.deleteUsuario(id);
-        commit('DELETE_USUARIO', id); 
+        commit('DELETE_USUARIO', id);
       } catch (error) {
         console.error('Error al eliminar usuario:', error);
       }
@@ -78,14 +107,14 @@ export default new Vuex.Store({
     async updateUsuario({ commit }, { id, usuario }) {
       try {
         const response = await userService.actualizarUsuario(id, usuario);
-        commit('UPDATE_USUARIO', response.usuario); 
+        commit('UPDATE_USUARIO', response.usuario);
       } catch (error) {
         console.error('Error al actualizar usuario:', error);
-        throw error; 
+        throw error;
       }
-      }
-    
-   
+    }
+
+
 
   },
 });

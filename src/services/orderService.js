@@ -20,7 +20,27 @@ const crearPedido = async (pedido) => {
   }
 };
 
+const deletePedido = async (folio) => {
+  try {
+    const response = await axios.delete(`${API_URL}/${folio}`);
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};
+
+const actualizarPedido = async (folio,pedido) =>{
+  try{
+    const response = await axios.put(`${API_URL}/${folio}`, pedido);
+    return response.data;
+  }catch (error){
+    throw error;
+  }
+}
+
 export default {
   getPedidos,
-  crearPedido
+  crearPedido,
+  deletePedido,
+  actualizarPedido
 };

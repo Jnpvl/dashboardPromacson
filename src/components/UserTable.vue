@@ -8,6 +8,7 @@
         </md-field>
       </div>
     </div>
+
     <md-table :value="filteredUsers" :table-header-color="tableHeaderColor">
       <template v-slot:md-table-row="{ item }">
         <md-table-row :key="item.id">
@@ -29,9 +30,8 @@
                 {{ tipo }}
               </option>
             </select>
-
           </md-table-cell>
-
+          
           <md-table-cell md-label="Estatus">
             <div v-if="editUserId !== item.id">{{ item.estatus }}</div>
             <select v-else v-model="editData.estatus" class="md-select" required>
@@ -39,6 +39,7 @@
               <option value="Inactivo">Inactivo</option>
             </select>
           </md-table-cell>
+
           <md-table-cell md-label="Acciones">
             <md-button v-if="editUserId !== item.id" class="md-just-icon md-simple md-primary"
               @click="enableEdit(item)">
@@ -49,6 +50,7 @@
               <md-icon>save</md-icon>
               <md-tooltip md-direction="top">Guardar</md-tooltip>
             </md-button>
+            
             <md-button class="md-just-icon md-simple md-danger" @click="openConfirmDialog(item.id)">
               <md-icon>close</md-icon>
               <md-tooltip md-direction="top">Eliminar</md-tooltip>
@@ -85,11 +87,7 @@
         <md-button @click="closePasswordDialog">Cancelar</md-button>
       </md-dialog-actions>
     </md-dialog>
-    <dialog-message :title="'Mensaje'" :message="dialogMessage" :show="showDialog"
-      @close="showDialog = false"></dialog-message>
-    <dialog-message :title="'Mensaje'" :message="dialogMessage" :show.sync="showDialog"></dialog-message>
-
-
+    <dialog-message :title="dialogTitle" :message="dialogMessage" :show.sync="showDialog"></dialog-message>
   </div>
 </template>
 
@@ -121,6 +119,7 @@ export default {
       userIdToChangePassword: null,
       errors: {},
       dialogMessage: '',
+      dialogTitle: '',
       showDialog: false
     };
   },
@@ -147,6 +146,7 @@ export default {
     confirmDelete() {
       this.deleteUsuario(this.userIdToDelete).then(() => {
         this.fetchUsuarios();
+        this.dialogTitle = "Eliminar"
         this.dialogMessage = 'Usuario eliminado correctamente';
         this.showDialog = true;
       }).catch(error => {
@@ -203,6 +203,7 @@ export default {
         await this.updateUsuario({ id, usuario: this.editData });
         this.editUserId = null;
         this.userIdToChangePassword = null;
+        this.dialogTitle = 'Actualizado'
         this.dialogMessage = 'Usuario editado correctamente';
         this.showDialog = true;
         this.fetchUsuarios();
