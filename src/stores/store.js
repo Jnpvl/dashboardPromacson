@@ -7,9 +7,13 @@ Vue.use(Vuex);
 export default new Vuex.Store({
   state: {
     pedidos: [],
-    usuarios: []
+    usuarios: [],
+    pedidoActual: {}
   },
   mutations: {
+    SET_PEDIDO_ACTUAL(state, pedido) {
+      state.pedidoActual = pedido; 
+    },
     SET_PEDIDOS(state, pedidos) {
       state.pedidos = pedidos;
     },
@@ -45,6 +49,16 @@ export default new Vuex.Store({
 
   },
   actions: {
+    async fetchDetallePedido({ commit }, folio) {
+      try {
+        const pedido = await orderService.getDetallesPedido(folio);
+        commit('SET_PEDIDO_ACTUAL', pedido);
+        console.log('store', JSON.stringify(pedido, null, 2));
+      } catch (error) {
+        console.error('Error al obtener detalles del pedido:', error);
+      }
+    },
+    
     async fetchPedidos({ commit }) {
       try {
         const pedidos = await orderService.getPedidos();
@@ -113,8 +127,6 @@ export default new Vuex.Store({
         throw error;
       }
     }
-
-
 
   },
 });

@@ -5,6 +5,7 @@ import Maps from "@/pages/Maps.vue";
 import Login from "@/pages/LoginView.vue";
 import User from "@/pages/UsersView.vue";
 import Orders from "@/pages/OrdersView.vue";
+import OrderDetails from "@/components/OrderDetails.vue"
 
 
 
@@ -41,6 +42,12 @@ const routes = [
         path: "orders",
         name: "Listado de Pedidos",
         component: Orders,
+        meta: { requiresAuth: true },
+      },
+      {
+        path: "orders/:folio", 
+        name: "Detalles del pedido",
+        component: OrderDetails,
         meta: { requiresAuth: true },
       },
       {

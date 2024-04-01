@@ -6,6 +6,7 @@ import StatsCard from "./Cards/StatsCard.vue";
 //personalizado
 import UserTable from "./UserTable.vue"
 import OrderTable from "./OrderTable.vue"
+import OrderDetails from "./OrderDetails.vue"
 
 
 export {
@@ -13,5 +14,6 @@ export {
   NavTabsCard,
   StatsCard,
   UserTable,
-  OrderTable
+  OrderTable,
+  OrderDetails
 };

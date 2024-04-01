@@ -38,9 +38,20 @@ const actualizarPedido = async (folio,pedido) =>{
   }
 }
 
+const getDetallesPedido = async (folio) => {
+  try {
+    const response = await axios.get(`${API_URL}/${folio}`);
+    return response.data.pedido;
+  } catch (error) {
+    throw error;
+  }
+};
+
+
 export default {
   getPedidos,
   crearPedido,
   deletePedido,
-  actualizarPedido
+  actualizarPedido,
+  getDetallesPedido
 };

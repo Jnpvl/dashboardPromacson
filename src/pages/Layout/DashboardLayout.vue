@@ -52,7 +52,6 @@
 import TopNavbar from "./TopNavbar.vue";
 //import ContentFooter from "./ContentFooter.vue";
 import DashboardContent from "./Content.vue";
-import MobileMenu from "@/pages/Layout/MobileMenu.vue";
 import FixedPlugin from "./Extra/FixedPlugin.vue";
 
 export default {
@@ -60,7 +59,6 @@ export default {
     TopNavbar,
     DashboardContent,
     // ContentFooter,
-    MobileMenu,
     FixedPlugin,
   },
   methods: {

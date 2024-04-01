@@ -33,13 +33,7 @@
                 {{ estatus }}
               </option>
             </select>
-
-
           </md-table-cell>
-
-
-
-
           <md-table-cell md-label="Facturado">{{ formatFecha(item.HoraF) }}</md-table-cell>
           <md-table-cell md-label="Cargado">{{ formatFecha(item.HoraC) }}</md-table-cell>
           <md-table-cell md-label="En Ruta">{{ formatFecha(item.HoraR) }}</md-table-cell>
@@ -55,12 +49,13 @@
               <md-icon>save</md-icon>
               <md-tooltip md-direction="top">Guardar</md-tooltip>
             </md-button>
-
-
-
             <md-button class="md-just-icon md-simple md-danger" @click="openConfirmDialog(item.folio)">
               <md-icon>close</md-icon>
               <md-tooltip md-direction="top">Eliminar</md-tooltip>
+            </md-button>
+            <md-button class="md-just-icon md-simple md-primary" @click="viewOrderDetails(item.folio)">
+              <md-icon>visibility</md-icon>
+              <md-tooltip md-direction="top">Detalle</md-tooltip>
             </md-button>
           </md-table-cell>
         </md-table-row>
@@ -184,15 +179,17 @@ export default {
         this.dialogTitle = 'Actualizado';
         this.dialogMessage = 'Pedido editado correctamente';
         this.showDialog = true;
-        await this.fetchPedidos(); 
+        await this.fetchPedidos();
       } catch (error) {
         console.error('Error al actualizar pedido:', error);
       } finally {
         this.editOrderFolio = null;
-        this.closeDialog(); 
+        this.closeDialog();
       }
+    },
+    viewOrderDetails(folio) {
+      this.$router.push({ name: 'Detalles del pedido', params: { folio, } });
     }
-
 
   },
   mounted() {
