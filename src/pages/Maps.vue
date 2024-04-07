@@ -3,96 +3,64 @@
 </template>
 
 <script>
-import { API_KEY } from "./API_KEY";
-import { Loader, LoaderOptions } from "google-maps";
-
-const loader = new Loader(API_KEY);
 export default {
+  props: {
+    coordenadas: {
+      type: Array,
+      required: true,
+      default: () => [],
+    },
+  },
   mounted() {
-    loader.load().then(function (google) {
-      var myLatlng = new google.maps.LatLng(29.135415, -110.973894);
-      var mapOptions = {
-        zoom: 13,
-        center: myLatlng,
-        scrollwheel: false, 
-        styles: [
-          {
-            featureType: "water",
-            stylers: [
-              { saturation: 43 },
-              { lightness: -11 },
-              { hue: "#0088ff" },
-            ],
-          },
-          {
-            featureType: "road",
-            elementType: "geometry.fill",
-            stylers: [
-              { hue: "#ff0000" },
-              { saturation: -100 },
-              { lightness: 99 },
-            ],
-          },
-          {
-            featureType: "road",
-            elementType: "geometry.stroke",
-            stylers: [{ color: "#808080" }, { lightness: 54 }],
-          },
-          {
-            featureType: "landscape.man_made",
-            elementType: "geometry.fill",
-            stylers: [{ color: "#ece2d9" }],
-          },
-          {
-            featureType: "poi.park",
-            elementType: "geometry.fill",
-            stylers: [{ color: "#ccdca1" }],
-          },
-          {
-            featureType: "road",
-            elementType: "labels.text.fill",
-            stylers: [{ color: "#767676" }],
-          },
-          {
-            featureType: "road",
-            elementType: "labels.text.stroke",
-            stylers: [{ color: "#ffffff" }],
-          },
-          { featureType: "poi", stylers: [{ visibility: "off" }] },
-          {
-            featureType: "landscape.natural",
-            elementType: "geometry.fill",
-            stylers: [{ visibility: "on" }, { color: "#b8cb93" }],
-          },
-          { featureType: "poi.park", stylers: [{ visibility: "on" }] },
-          {
-            featureType: "poi.sports_complex",
-            stylers: [{ visibility: "on" }],
-          },
-          { featureType: "poi.medical", stylers: [{ visibility: "on" }] },
-          {
-            featureType: "poi.business",
-            stylers: [{ visibility: "simplified" }],
-          },
-        ],
-      };
-      var map = new google.maps.Map(document.getElementById("map"), mapOptions);
-
-      var marker = new google.maps.Marker({
-        position: myLatlng,
-        title: "Hello World!",
+    this.initMap();
+  },
+  methods: {
+    initMap() {
+      if (!window.google || !window.google.maps) {
+        console.error("Google Maps API no está disponible.");
+        return;
+      }
+      this.mostrarRuta();
+    },
+    mostrarRuta() {
+      const map = new google.maps.Map(document.getElementById('map'), {
+        zoom: 14,
+        center: new google.maps.LatLng(this.coordenadas[0].latitud, this.coordenadas[0].longitud),
       });
 
-      // To add the marker to the map, call setMap();
-      marker.setMap(map);
-    });
+      const directionsService = new google.maps.DirectionsService();
+      const directionsRenderer = new google.maps.DirectionsRenderer();
+      directionsRenderer.setMap(map);
+
+      const waypoints = this.coordenadas.slice(1, this.coordenadas.length - 1).map(coord => ({
+        location: new google.maps.LatLng(coord.latitud, coord.longitud),
+        stopover: true,
+      }));
+
+      const origin = this.coordenadas[0];
+      const destination = this.coordenadas[this.coordenadas.length - 1];
+
+      directionsService.route({
+        origin: new google.maps.LatLng(origin.latitud, origin.longitud),
+        destination: new google.maps.LatLng(destination.latitud, destination.longitud),
+        waypoints: waypoints,
+        optimizeWaypoints: true,
+        travelMode: google.maps.TravelMode.DRIVING,
+      }, (response, status) => {
+        if (status === google.maps.DirectionsStatus.OK) {
+          directionsRenderer.setDirections(response);
+        } else {
+          console.error('Directions request failed due to ' + status);
+        }
+      });
+    },
   },
 };
 </script>
 
 <style scoped>
-#map{
+#map {
   height: 50vh;
-  width: 100%; 
+  width: 100%;
 }
 </style>

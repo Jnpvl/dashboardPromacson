@@ -40,7 +40,6 @@
           <md-table-cell md-label="Entregado">{{ formatFecha(item.HoraE) }}</md-table-cell>
 
           <md-table-cell md-label="Acciones">
-    <!-- Botón de editar visible solo para estatus 'Facturado' o 'Cargado' -->
     <md-button 
       v-if="editOrderFolio !== item.folio && ['Facturado', 'Cargado'].includes(item.estatus)" 
       class="md-just-icon md-simple md-primary" 

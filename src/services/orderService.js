@@ -51,6 +51,7 @@ const getDetallesPedido = async (folio) => {
 const getCoordenadasPedido = async (folio) => {
   try{
     const response = await axios.get(`${URL}/seguimiento/${folio}`);
+    return response.data;
   } catch (error){
     throw error;
   }

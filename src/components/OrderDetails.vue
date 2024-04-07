@@ -18,9 +18,15 @@
           </md-card-header>
 
           <md-card-content class="contenedor">
-            <div class="mapa">
-              <Maps />
+            <div class="mapa" v-if="coordenadasPedidoActual && coordenadasPedidoActual.coordenadas">
+              <l-map :zoom="16" :center="mapCenter" style="height: 400px;">
+                <l-tile-layer :url="mapUrl" :attribution="mapAttribution"></l-tile-layer>
+                <l-polyline :lat-lngs="rutaCoordenadas" color="blue"></l-polyline>
+              </l-map>
             </div>
+
+
+
             <div class="info-pedido">
               <div class="campo-info">
                 <span class="etiqueta">Cliente:</span>
@@ -46,6 +52,11 @@
                 <span class="etiqueta">Hora de Entrega:</span>
                 <span class="valor">{{ pedidoActual.HoraE }}</span>
               </div>
+              <div v-for="(coordenada, index) in coordenadasPedidoActual.coordenadas" :key="index" class="campo-info">
+                <span class="etiqueta">Coordenada {{ index + 1 }}:</span>
+                <span class="valor">Latitud: {{ coordenada.latitud }}, Longitud: {{ coordenada.longitud }}</span>
+              </div>
+
 
 
             </div>
@@ -64,28 +75,45 @@
 
 <script>
 import { mapState, mapActions } from 'vuex';
-import Maps from '../pages/Maps.vue'
+import { LMap, LTileLayer, LPolyline } from 'vue2-leaflet';
+import 'leaflet/dist/leaflet.css';
 
 export default {
   data() {
     return {
       orderFolio: this.$route.params.folio,
+      mapUrl: 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+      mapAttribution: 'Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
     };
   },
+  components: {
+    LMap, LTileLayer, LPolyline
+  },
   computed: {
-    ...mapState(['pedidoActual'])
+    ...mapState(['pedidoActual', 'coordenadasPedidoActual']),
+    mapCenter() {
+      if (this.coordenadasPedidoActual && this.coordenadasPedidoActual.coordenadas.length > 0) {
+        return [this.coordenadasPedidoActual.coordenadas[0].latitud, this.coordenadasPedidoActual.coordenadas[0].longitud];
+      }
+      return [0, 0];
+    },
+    rutaCoordenadas() {
+      const ruta = this.coordenadasPedidoActual.coordenadas.map(c => [c.latitud, c.longitud]);
+      console.log(ruta);
+      return ruta;
+    }
+
   },
   methods: {
-    ...mapActions(['fetchDetallePedido']),
+    ...mapActions(['fetchDetallePedido', 'fetchCoordenadasPedido']),
     regresar() {
       this.$router.back();
     }
   },
   mounted() {
-    this.fetchDetallePedido(this.orderFolio);
-  },
-  components: {
-    Maps
+    this.fetchDetallePedido(this.orderFolio).then(() => {
+      this.fetchCoordenadasPedido(this.orderFolio);
+    });
   }
 };
 </script>
@@ -117,7 +145,7 @@ export default {
 }
 
 .mapa {
-  background-color: red;
+  background-color: yellow;
   flex-basis: 50%;
 }
 
@@ -144,24 +172,16 @@ export default {
 
 .campo-info {
   display: flex;
-  /* Utiliza flexbox para posicionar los span uno al lado del otro */
   align-items: center;
-  /* Alinea los items verticalmente */
   margin: 5px 0;
-  /* Ajusta el margen según lo necesites */
 }
 
 .etiqueta {
   font-weight: 600;
-  /* Más peso para la etiqueta */
   margin-right: 8px;
-  /* Espacio entre la etiqueta y el valor */
-  /* Otros estilos que quieras para las etiquetas */
 }
 
 .valor {
   font-weight: 400;
-  /* Menos peso para el valor */
-  /* Otros estilos que quieras para los valores */
 }
 </style>

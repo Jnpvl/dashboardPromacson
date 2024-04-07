@@ -8,7 +8,10 @@ export default new Vuex.Store({
   state: {
     pedidos: [],
     usuarios: [],
-    pedidoActual: {}
+    pedidoActual: {},
+    coordenadasPedidoActual:{
+      coordenadas:[]
+    }
   },
   mutations: {
     SET_PEDIDO_ACTUAL(state, pedido) {
@@ -28,6 +31,9 @@ export default new Vuex.Store({
       if (index !== -1) {
         Vue.set(state.pedidos, index, pedidoActualizado);
       }
+    },
+    SET_COORDENADAS_ACTUAL(state,pedido){
+      state.coordenadasPedidoActual = pedido;
     },
 
 
@@ -53,11 +59,19 @@ export default new Vuex.Store({
       try {
         const pedido = await orderService.getDetallesPedido(folio);
         commit('SET_PEDIDO_ACTUAL', pedido);
-        console.log('store', JSON.stringify(pedido, null, 2));
       } catch (error) {
         console.error('Error al obtener detalles del pedido:', error);
       }
     },
+    async fetchCoordenadasPedido({ commit }, folio) {
+      try {
+        const pedido = await orderService.getCoordenadasPedido(folio);
+        commit('SET_COORDENADAS_ACTUAL', pedido);
+      } catch (error) {
+        console.error('Error al obtener coordenadas del pedido:', error);
+      }
+    },
+    
     
     async fetchPedidos({ commit }) {
       try {
