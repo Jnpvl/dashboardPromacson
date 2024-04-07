@@ -7,7 +7,6 @@
             <div class="contenedor">
               <h4 class="title">Pedidos</h4>
               <md-button class="md-primary md-raised" @click="open = true">Nuevo Pedido</md-button>
-
             </div>
             <p class="category">Pedidos realizados</p>
           </md-card-header>
@@ -118,7 +117,7 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
 .contenedor {
   display: flex;
   justify-content: space-between;

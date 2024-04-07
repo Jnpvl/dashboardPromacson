@@ -1,10 +1,11 @@
 import axios from 'axios';
+import { API_URL } from './API_URL';
 
-const API_URL = 'http://localhost:3001/api/orders';
+const URL = API_URL+'orders';
 
 const getPedidos = async () => {
   try {
-    const response = await axios.get(API_URL);
+    const response = await axios.get(URL);
     return response.data.pedidos; 
   } catch (error) {
     throw error;
@@ -13,7 +14,7 @@ const getPedidos = async () => {
 
 const crearPedido = async (pedido) => {
   try {
-    const response = await axios.post(API_URL, pedido);
+    const response = await axios.post(URL, pedido);
     return response.data; 
   } catch (error) {
     throw error;
@@ -22,7 +23,7 @@ const crearPedido = async (pedido) => {
 
 const deletePedido = async (folio) => {
   try {
-    const response = await axios.delete(`${API_URL}/${folio}`);
+    const response = await axios.delete(`${URL}/${folio}`);
     return response.data;
   } catch (error) {
     throw error;
@@ -31,7 +32,7 @@ const deletePedido = async (folio) => {
 
 const actualizarPedido = async (folio,pedido) =>{
   try{
-    const response = await axios.put(`${API_URL}/${folio}`, pedido);
+    const response = await axios.put(`${URL}/${folio}`, pedido);
     return response.data;
   }catch (error){
     throw error;
@@ -40,12 +41,22 @@ const actualizarPedido = async (folio,pedido) =>{
 
 const getDetallesPedido = async (folio) => {
   try {
-    const response = await axios.get(`${API_URL}/${folio}`);
+    const response = await axios.get(`${URL}/${folio}`);
     return response.data.pedido;
   } catch (error) {
     throw error;
   }
 };
+
+const getCoordenadasPedido = async (folio) => {
+  try{
+    const response = await axios.get(`${URL}/seguimiento/${folio}`);
+  } catch (error){
+    throw error;
+  }
+}
+
+
 
 
 export default {
@@ -53,5 +64,6 @@ export default {
   crearPedido,
   deletePedido,
   actualizarPedido,
-  getDetallesPedido
+  getDetallesPedido,
+  getCoordenadasPedido
 };

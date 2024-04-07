@@ -10,6 +10,7 @@
             </div>
             <p class="category">usuarios registrados</p>
           </md-card-header>
+
           <md-card-content>
             <user-table table-header-color="green"></user-table>
           </md-card-content>
@@ -150,7 +151,7 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
 .md-select {
   width: 100%;
   padding: 14px 10px;
@@ -212,6 +213,10 @@ export default {
 
 .md-select-field .md-select:focus~.md-field-bar {
   transform: scaleX(1);
+}
+.contenedor {
+  display: flex;
+  justify-content: space-between;
 }
 
 </style>

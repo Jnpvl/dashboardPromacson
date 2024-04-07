@@ -40,24 +40,38 @@
           <md-table-cell md-label="Entregado">{{ formatFecha(item.HoraE) }}</md-table-cell>
 
           <md-table-cell md-label="Acciones">
-            <md-button v-if="editOrderFolio !== item.folio" class="md-just-icon md-simple md-primary"
-              @click="enableEdit(item)">
-              <md-icon>edit</md-icon>
-              <md-tooltip md-direction="top">Editar</md-tooltip>
-            </md-button>
-            <md-button v-else class="md-just-icon md-simple md-primary" @click="saveEdit(item.folio)">
-              <md-icon>save</md-icon>
-              <md-tooltip md-direction="top">Guardar</md-tooltip>
-            </md-button>
-            <md-button class="md-just-icon md-simple md-danger" @click="openConfirmDialog(item.folio)">
-              <md-icon>close</md-icon>
-              <md-tooltip md-direction="top">Eliminar</md-tooltip>
-            </md-button>
-            <md-button class="md-just-icon md-simple md-primary" @click="viewOrderDetails(item.folio)">
-              <md-icon>visibility</md-icon>
-              <md-tooltip md-direction="top">Detalle</md-tooltip>
-            </md-button>
-          </md-table-cell>
+    <!-- Botón de editar visible solo para estatus 'Facturado' o 'Cargado' -->
+    <md-button 
+      v-if="editOrderFolio !== item.folio && ['Facturado', 'Cargado'].includes(item.estatus)" 
+      class="md-just-icon md-simple md-primary" 
+      @click="enableEdit(item)">
+      <md-icon>edit</md-icon>
+      <md-tooltip md-direction="top">Editar</md-tooltip>
+    </md-button>
+
+    <md-button 
+      v-else-if="editOrderFolio === item.folio" 
+      class="md-just-icon md-simple md-primary" 
+      @click="saveEdit(item.folio)">
+      <md-icon>save</md-icon>
+      <md-tooltip md-direction="top">Guardar</md-tooltip>
+    </md-button>
+
+    <md-button 
+      v-if="['Facturado', 'Cargado'].includes(item.estatus)" 
+      class="md-just-icon md-simple md-danger" 
+      @click="openConfirmDialog(item.folio)">
+      <md-icon>close</md-icon>
+      <md-tooltip md-direction="top">Eliminar</md-tooltip>
+    </md-button>
+
+    <md-button class="md-just-icon md-simple md-primary" @click="viewOrderDetails(item.folio)">
+      <md-icon>visibility</md-icon>
+      <md-tooltip md-direction="top">Detalle</md-tooltip>
+    </md-button>
+  </md-table-cell>
+
+          
         </md-table-row>
       </template>
     </md-table>
@@ -104,33 +118,32 @@ export default {
     DialogMessage
   },
   computed: {
-    ...mapState(["pedidos"]),
-    filteredOrders() {
-      let filtered = this.pedidos;
+  ...mapState(["pedidos"]),
+  filteredOrders() {
+    let filtered = this.pedidos;
 
-      if (this.searchTerm) {
-        const lowerSearchTerm = this.searchTerm.toLowerCase();
-        filtered = filtered.filter((order) => {
-          return (
-            order.folio.toString().toLowerCase().includes(lowerSearchTerm) ||
-            order.cliente.toLowerCase().includes(lowerSearchTerm) ||
-            order.estatus.toLowerCase().includes(lowerSearchTerm)
-          );
-        });
-      }
+    if (this.searchTerm) {
+      const lowerSearchTerm = this.searchTerm.toLowerCase();
+      filtered = filtered.filter(order => 
+        order.folio.toString().toLowerCase().includes(lowerSearchTerm) ||
+        order.cliente.toLowerCase().includes(lowerSearchTerm) ||
+        order.estatus.toLowerCase().includes(lowerSearchTerm)
+      );
+    }
 
-      if (this.filterDate) {
-        const selectedDate = new Date(this.filterDate).setHours(0, 0, 0, 0);
-        filtered = filtered.filter((order) => {
-          const orderDate = new Date(order.HoraF).setHours(0, 0, 0, 0);
-          return orderDate === selectedDate;
-        });
-      }
+    if (this.filterDate) {
+      const selectedDate = new Date(this.filterDate).setHours(0, 0, 0, 0);
+      filtered = filtered.filter(order => {
+        const orderDate = new Date(order.HoraF).setHours(0, 0, 0, 0);
+        return orderDate === selectedDate;
+      });
+    }
+    filtered.sort((a, b) => new Date(b.HoraF) - new Date(a.HoraF));
 
-      return filtered;
-    },
-
+    return filtered;
   },
+},
+
   methods: {
     ...mapActions(['fetchPedidos', 'deletePedido', 'updatePedido']),
     formatFecha(fecha) {

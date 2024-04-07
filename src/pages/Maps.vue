@@ -10,11 +10,11 @@ const loader = new Loader(API_KEY);
 export default {
   mounted() {
     loader.load().then(function (google) {
-      var myLatlng = new google.maps.LatLng(40.748817, -73.985428);
+      var myLatlng = new google.maps.LatLng(29.135415, -110.973894);
       var mapOptions = {
         zoom: 13,
         center: myLatlng,
-        scrollwheel: false, // we disable de scroll over the map, it is a really annoing when you scroll through page
+        scrollwheel: false, 
         styles: [
           {
             featureType: "water",
@@ -89,3 +89,10 @@ export default {
   },
 };
 </script>
+
+<style scoped>
+#map{
+  height: 50vh;
+  width: 100%; 
+}
+</style>

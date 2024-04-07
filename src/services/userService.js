@@ -1,10 +1,11 @@
 import axios from 'axios';
+import { API_URL } from './API_URL';
 
-const API_URL = 'http://localhost:3001/api/users';
+const URL = API_URL + 'users';
 
 const getUsuarios = async () => {
   try {
-    const response = await axios.get(API_URL);
+    const response = await axios.get(URL);
     return response.data.usuarios;
   } catch (error) {
     throw error;
@@ -13,7 +14,7 @@ const getUsuarios = async () => {
 
 const crearUsuario = async (usuario) => {
   try {
-    const response = await axios.post(API_URL, usuario);
+    const response = await axios.post(URL, usuario);
     return response.data;
   } catch (error) {
     throw error;
@@ -22,7 +23,7 @@ const crearUsuario = async (usuario) => {
 
 const actualizarUsuario = async (id, usuario) => {
   try {
-    const response = await axios.put(`${API_URL}/${id}`, usuario);
+    const response = await axios.put(`${URL}/${id}`, usuario);
     return response.data;
   } catch (error) {
     throw error;
@@ -31,7 +32,7 @@ const actualizarUsuario = async (id, usuario) => {
 
 const deleteUsuario = async (id) => {
   try {
-    const response = await axios.delete(`${API_URL}/${id}`);
+    const response = await axios.delete(`${URL}/${id}`);
     return response.data;
   } catch (error) {
     throw error;
