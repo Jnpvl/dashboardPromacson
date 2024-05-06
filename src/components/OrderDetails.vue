@@ -24,45 +24,40 @@
                 <l-polyline :lat-lngs="rutaCoordenadas" color="blue"></l-polyline>
               </l-map>
             </div>
-
-
-
             <div class="info-pedido">
               <div class="campo-info">
                 <span class="etiqueta">Cliente:</span>
                 <span class="valor">{{ pedidoActual.cliente }}</span>
               </div>
               <div class="campo-info">
-                <span class="etiqueta">cliente-estatus:</span>
+                <span class="etiqueta">Estado:</span>
                 <span class="valor">{{ pedidoActual.estatus }}</span>
               </div>
               <div class="campo-info">
                 <span class="etiqueta">Hora de Facturacion:</span>
-                <span class="valor">{{ pedidoActual.HoraF }}</span>
+                <span class="valor">{{ formatFecha(pedidoActual.HoraF )}}</span>
               </div>
               <div class="campo-info">
                 <span class="etiqueta">Hora de Carga:</span>
-                <span class="valor">{{ pedidoActual.HoraC }}</span>
+                <span class="valor">{{ formatFecha(pedidoActual.HoraC) }}</span>
               </div>
               <div class="campo-info">
                 <span class="etiqueta">Hora de Ruta:</span>
-                <span class="valor">{{ pedidoActual.HoraR }}</span>
+                <span class="valor">{{ formatFecha(pedidoActual.HoraR) }}</span>
               </div>
               <div class="campo-info">
                 <span class="etiqueta">Hora de Entrega:</span>
-                <span class="valor">{{ pedidoActual.HoraE }}</span>
+                <span class="valor">{{ formatFecha(pedidoActual.HoraE) }}</span>
               </div>
+              <!--  
               <div v-for="(coordenada, index) in coordenadasPedidoActual.coordenadas" :key="index" class="campo-info">
                 <span class="etiqueta">Coordenada {{ index + 1 }}:</span>
                 <span class="valor">Latitud: {{ coordenada.latitud }}, Longitud: {{ coordenada.longitud }}</span>
               </div>
-
-
-
+              -->
             </div>
           </md-card-content>
         </md-card>
-
       </div>
     </div>
   </div>
@@ -108,7 +103,20 @@ export default {
     ...mapActions(['fetchDetallePedido', 'fetchCoordenadasPedido']),
     regresar() {
       this.$router.back();
-    }
+    },
+    formatFecha(fecha) {
+      if (!fecha) {
+        return '';
+      }
+      const dateObj = new Date(fecha);
+      const year = dateObj.getFullYear();
+      const month = ('0' + (dateObj.getMonth() + 1)).slice(-2);
+      const day = ('0' + dateObj.getDate()).slice(-2);
+      const hours = ('0' + dateObj.getHours()).slice(-2);
+      const minutes = ('0' + dateObj.getMinutes()).slice(-2);
+      const seconds = ('0' + dateObj.getSeconds()).slice(-2);
+      return `${day}/${month}/${year} ${hours}:${minutes}:${seconds}`;
+    },
   },
   mounted() {
     this.fetchDetallePedido(this.orderFolio).then(() => {

@@ -23,7 +23,7 @@ const routes = [
   {
     path: "/",
     component: DashboardLayout,
-    redirect: "/dashboard",
+    redirect: "/orders",
     meta: { requiresAuth: true },
     children: [
       {

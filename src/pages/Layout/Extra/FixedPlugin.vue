@@ -5,18 +5,7 @@
         <i class="fa fa-cog fa-2x" @click="toggleDropDown"> </i>
       </a>
       <ul class="dropdown-menu" :class="{ show: isOpen }">
-        <li class="header-title">Sidebar Filters</li>
-        <li class="adjustments-line text-center">
-          <span
-            v-for="item in sidebarColors"
-            :key="item.color"
-            class="badge filter"
-            :class="[`badge-${item.color}`, { active: item.active }]"
-            :data-color="item.color"
-            @click="changeSidebarBackground(item)"
-          >
-          </span>
-        </li>
+       
         <li class="header-title">Images</li>
         <li
           v-for="item in sidebarImages"

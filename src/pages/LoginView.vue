@@ -47,7 +47,7 @@ export default {
     async ingresar() {
       try {
         const response = await authService.login(this.nombre, this.contraseña);
-        this.$router.push({ name: 'Dashboard' }); 
+        this.$router.push({ name: 'Listado de Pedidos' }); 
       } catch (error) {
         console.error(error);
         alert('Inicio de sesión fallido. Verifica tus credenciales.');
