@@ -3,7 +3,8 @@
 import axios from 'axios';
 import { API_URL } from './API_URL';
 
-const URL = API_URL + 'login';
+//const URL = 'http://192.168.1.72:3002/api/' + 'login';
+const URL = 'http://192.168.1.200:3002/api/' + 'login';
 
 const login = async (nombre, contraseña) => {
   try {
@@ -15,6 +16,7 @@ const login = async (nombre, contraseña) => {
    
       localStorage.setItem('user', JSON.stringify(response.data));
     }
+   // console.log('sos todo' + JSON.stringify(response.data))
     return response.data;
   } catch (error) {
    

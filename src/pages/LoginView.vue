@@ -34,7 +34,9 @@
 </template>
 
 <script>
+import { mapActions } from 'vuex';
 import authService from '@/services/authService'; 
+
 
 export default {
   data() {
@@ -44,13 +46,19 @@ export default {
     };
   },
   methods: {
+    ...mapActions(['login']), 
     async ingresar() {
       try {
         const response = await authService.login(this.nombre, this.contraseña);
-        this.$router.push({ name: 'Listado de Pedidos' }); 
+        if (response.token && response.usuario) {
+          await this.login(response); 
+          this.$router.push({ name: 'Listado de Pedidos' }); 
+        } else {
+          throw new Error('Datos de autenticación incompletos.');
+        }
       } catch (error) {
         console.error(error);
-        alert('Inicio de sesión fallido. Verifica tus credenciales.');
+        alert('Inicio de sesión fallido. Verifica tus credenciales.'); 
       }
     }
   }

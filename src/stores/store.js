@@ -2,6 +2,7 @@ import Vue from 'vue';
 import Vuex from 'vuex';
 import orderService from '../services/orderService';
 import userService from '../services/userService';
+import authService from '../services/authService';
 Vue.use(Vuex);
 
 export default new Vuex.Store({
@@ -11,9 +12,17 @@ export default new Vuex.Store({
     pedidoActual: {},
     coordenadasPedidoActual:{
       coordenadas:[]
-    }
+    },
+    usuarioSesion: JSON.parse(localStorage.getItem('user')) || null,
+    token: localStorage.getItem('token') || null,
   },
   mutations: {
+    SET_USUARIO_SESION(state, usuario) {
+      state.usuarioSesion = usuario;
+    },
+    SET_TOKEN(state, token) {
+      state.token = token;
+    },
     SET_PEDIDO_ACTUAL(state, pedido) {
       state.pedidoActual = pedido; 
     },
@@ -55,6 +64,23 @@ export default new Vuex.Store({
 
   },
   actions: {
+    login({ commit }, userData) {
+      return new Promise((resolve) => {
+        commit('SET_TOKEN', userData.token);
+        commit('SET_USUARIO_SESION', userData.usuario);
+        localStorage.setItem('token', userData.token);
+        localStorage.setItem('user', JSON.stringify(userData.usuario));
+        resolve();
+      });
+    },
+  
+    logout({ commit }) {
+      localStorage.removeItem('token');
+      localStorage.removeItem('user');
+      commit('SET_TOKEN', null);
+      commit('SET_USUARIO_SESION', null);
+    },
+
     async fetchDetallePedido({ commit }, folio) {
       try {
         const pedido = await orderService.getDetallesPedido(folio);
@@ -127,7 +153,7 @@ export default new Vuex.Store({
     async deleteUsuario({ commit }, id) {
       try {
         await userService.deleteUsuario(id);
-        commit('DELETE_USUARIO', id);
+        commit("DELETE_USUARIO", id);
       } catch (error) {
         console.error('Error al eliminar usuario:', error);
       }

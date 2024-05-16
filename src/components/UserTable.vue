@@ -40,7 +40,7 @@
             </select>
           </md-table-cell>
 
-          <md-table-cell md-label="Acciones">
+          <md-table-cell md-label="Acciones" v-if="tipoUsuario === 'Administrador'">
             <md-button v-if="editUserId !== item.id" class="md-just-icon md-simple md-primary"
               @click="enableEdit(item)">
               <md-icon>edit</md-icon>
@@ -125,6 +125,9 @@ export default {
   },
   computed: {
     ...mapState(["usuarios"]),
+    tipoUsuario() {
+      return this.$store.state.usuarioSesion ? this.$store.state.usuarioSesion.tipoUsuario : null;
+    },
     filteredUsers() {
       return this.usuarios.filter((user) => {
         const searchTermLower = this.searchTerm.toLowerCase();

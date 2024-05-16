@@ -76,6 +76,10 @@ export default {
       autoClose: this.autoClose,
     };
   },
+  mounted() {
+  this.user = this.getUserFromLocalStorage();
+},
+
   data() {
     return {
       user: this.getUserFromLocalStorage(),
@@ -83,9 +87,10 @@ export default {
   },
   methods:{
     getUserFromLocalStorage() {
-      const userString = localStorage.getItem('user');
-      return userString ? JSON.parse(userString).usuario : null;
-    },
+  const userString = localStorage.getItem('user');
+  return userString ? JSON.parse(userString) : null;
+}
+
   },
   computed: {
     sidebarStyle() {
