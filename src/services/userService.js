@@ -1,8 +1,8 @@
 import axios from 'axios';
 import { API_URL } from './API_URL';
 
-//const URL = 'http://192.168.1.72:3002/api/' + 'users';
-const URL = 'http://tiendapromacson.ddns.net/api/' + 'users';
+const URL = 'http://192.168.1.72:3002/api/' + 'users';
+//const URL = 'http://tiendapromacson.ddns.net/api/' + 'users';
 
 const getUsuarios = async () => {
   try {

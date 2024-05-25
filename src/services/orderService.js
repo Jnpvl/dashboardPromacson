@@ -1,8 +1,8 @@
 import axios from 'axios';
 import { API_URL } from './API_URL';
 
-//const URL = 'http://192.168.1.72:3002/api/' + 'orders';
-const URL ='http://tiendapromacson.ddns.net/api/' +'orders';
+const URL = 'http://192.168.1.72:3002/api/' + 'orders';
+//const URL ='http://tiendapromacson.ddns.net/api/' +'orders';
 
 const getPedidos = async () => {
   try {

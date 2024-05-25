@@ -3,8 +3,8 @@
 import axios from 'axios';
 import { API_URL } from './API_URL';
 
-//const URL = 'http://192.168.1.72:3002/api/' + 'login';
-const URL = 'http://tiendapromacson.ddns.net/api/' + 'login';
+const URL = 'http://192.168.1.72:3002/api/' + 'login';
+//const URL = 'http://tiendapromacson.ddns.net/api/' + 'login';
 
 const login = async (nombre, contraseña) => {
   try {
